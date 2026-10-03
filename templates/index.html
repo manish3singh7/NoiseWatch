@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth h-full">
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>NoiseWatch - Smart Urban Noise Monitoring Platform</title>
     <!-- PWA Manifest & Meta -->
     <link rel="manifest" href="/static/manifest.json" />
@@ -23,39 +23,39 @@
 </head>
 
 <body
-    class="min-h-screen flex flex-col font-sans antialiased text-slate-100 bg-slate-950 relative selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+    class="min-h-screen flex flex-col font-sans antialiased text-slate-100 bg-slate-950 relative selection:bg-indigo-500 selection:text-white w-full overflow-x-hidden">
 
     <!-- Live 3D Rotating Earth Background -->
-    <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden bg-slate-950">
+    <div class="fixed inset-0 pointer-events-none -z-10 w-full h-full overflow-hidden bg-slate-950">
         <!-- ThreeJS WebGL Canvas -->
-        <canvas id="earthCanvas" class="w-full h-full block"></canvas>
+        <canvas id="earthCanvas" class="w-full h-full block absolute inset-0"></canvas>
         <!-- Soft Contrast Overlay so dashboard elements stay legible -->
-        <div class="absolute inset-0 bg-slate-950/50 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-slate-950/60 pointer-events-none"></div>
     </div>
 
     <!-- Glassmorphic Header -->
     <header
-        class="sticky top-0 z-30 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800/80 shadow-lg shadow-black/20">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        class="sticky top-0 z-30 w-full bg-slate-900/85 backdrop-blur-xl border-b border-slate-800/80 shadow-lg shadow-black/20">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
 
             <!-- Clickable Logo & Brand Name -->
-            <a href="#" class="flex items-center gap-2.5 sm:gap-3 group cursor-pointer" title="Back to Dashboard">
+            <a href="#" class="flex items-center gap-2 sm:gap-3 group cursor-pointer flex-shrink-0" title="Back to Dashboard">
                 <div
                     class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/30 group-hover:bg-indigo-500 transition-colors flex-shrink-0">
-                    <img src="/statics/logo.svg" alt="NoiseWatch Logo" width="24" height="24"
+                    <img src="/statics/logo.svg" alt="NoiseWatch Logo" width="22" height="22"
                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
                     <i data-lucide="activity" class="w-5 h-5 hidden"></i>
                 </div>
-                <div class="truncate">
+                <div class="flex flex-col">
                     <h1
-                        class="font-bold text-base sm:text-xl leading-none text-white tracking-tight group-hover:text-indigo-400 transition-colors truncate">
+                        class="font-bold text-base sm:text-lg leading-tight text-white tracking-tight group-hover:text-indigo-400 transition-colors">
                         NoiseWatch</h1>
-                    <p class="text-[10px] sm:text-xs text-slate-400 font-medium truncate">Urban Noise Monitoring</p>
+                    <p class="text-[10px] sm:text-xs text-slate-400 font-medium leading-none">Urban Noise Platform</p>
                 </div>
             </a>
 
             <!-- Quick Action Controls -->
-            <div class="flex items-center gap-2 sm:gap-3">
+            <div class="flex items-center gap-2 flex-shrink-0">
                 <span
                     class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-500/30">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -64,9 +64,8 @@
 
                 <!-- Direct Admin Login Button -->
                 <a href="/login"
-                    class="bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 text-xs sm:text-sm font-medium px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition-all shadow-md flex items-center gap-1.5 group">
-                    <i data-lucide="shield-check"
-                        class="w-4 h-4 text-indigo-400 group-hover:text-indigo-300 transition-colors"></i>
+                    class="bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 text-xs sm:text-sm font-medium px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition-all shadow-md flex items-center gap-1.5">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-400"></i>
                     <span class="hidden sm:inline">Admin Login</span>
                     <span class="sm:hidden">Admin</span>
                 </a>
@@ -74,7 +73,7 @@
                 <!-- Report Noise Quick Action -->
                 <a href="#report-form"
                     class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-medium px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center gap-1.5">
-                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    <i data-lucide="plus-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
                     <span>Report</span>
                 </a>
             </div>
@@ -82,42 +81,41 @@
     </header>
 
     <!-- Main Dashboard Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8">
+    <main class="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-5 sm:space-y-8 box-border">
 
         <!-- Live Proximity Alert Banner -->
         <div id="proximityAlertBanner"
-            class="hidden p-3.5 sm:p-4 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-            <div class="flex items-center gap-3">
+            class="hidden p-3 sm:p-4 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5 sm:gap-3">
                 <div id="proximityIconBox" class="p-2 sm:p-2.5 rounded-xl flex-shrink-0">
-                    <i data-lucide="alert-octagon" class="w-5 h-5"></i>
+                    <i data-lucide="alert-octagon" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </div>
                 <div>
-                    <h3 id="proximityTitle" class="text-sm font-bold text-white leading-tight">Approaching Hotspot</h3>
-                    <p id="proximityDesc" class="text-xs text-slate-300 mt-0.5"></p>
+                    <h3 id="proximityTitle" class="text-xs sm:text-sm font-bold text-white leading-tight">Approaching Hotspot</h3>
+                    <p id="proximityDesc" class="text-[11px] sm:text-xs text-slate-300 mt-0.5"></p>
                 </div>
             </div>
-            <span id="proximityDistBadge" class="text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 sm:py-1 rounded-full border self-start sm:self-auto"></span>
+            <span id="proximityDistBadge" class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border self-start sm:self-auto"></span>
         </div>
 
         <!-- KPI Metric Cards -->
-        <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-5">
 
             <!-- Card 1 -->
             <div
-                class="bg-slate-900/60 backdrop-blur-md p-3.5 sm:p-5 rounded-2xl border border-slate-800/80 shadow-xl shadow-black/30 flex flex-col justify-between hover:border-slate-700/80 transition-all">
+                class="bg-slate-900/60 backdrop-blur-md p-3 sm:p-5 rounded-2xl border border-slate-800/80 shadow-xl shadow-black/30 flex flex-col justify-between hover:border-slate-700/80 transition-all">
                 <div class="flex items-center justify-between">
-                    <p class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Avg Noise</p>
-                    <div class="p-2 sm:p-2.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl">
-                        <i data-lucide="volume-2" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <p class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Avg Noise</p>
+                    <div class="p-1.5 sm:p-2.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl">
+                        <i data-lucide="volume-2" class="w-3.5 h-3.5 sm:w-5 sm:h-5"></i>
                     </div>
                 </div>
                 <div class="mt-2">
                     <div class="flex items-baseline gap-1">
-                        <span
-                            class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">64.2</span>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-400">dB</span>
+                        <span class="text-xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">64.2</span>
+                        <span class="text-[11px] sm:text-sm font-semibold text-slate-400">dB</span>
                     </div>
-                    <p class="text-[10px] sm:text-xs font-medium text-emerald-400 mt-1 flex items-center gap-1">
+                    <p class="text-[10px] sm:text-xs font-medium text-emerald-400 mt-0.5 flex items-center gap-1">
                         <i data-lucide="trending-down" class="w-3 h-3"></i> -2.4 dB
                     </p>
                 </div>
@@ -125,54 +123,54 @@
 
             <!-- Card 2 -->
             <div
-                class="bg-slate-900/60 backdrop-blur-md p-3.5 sm:p-5 rounded-2xl border border-slate-800/80 shadow-xl shadow-black/30 flex flex-col justify-between hover:border-slate-700/80 transition-all">
+                class="bg-slate-900/60 backdrop-blur-md p-3 sm:p-5 rounded-2xl border border-slate-800/80 shadow-xl shadow-black/30 flex flex-col justify-between hover:border-slate-700/80 transition-all">
                 <div class="flex items-center justify-between">
-                    <p class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Closest Hotspot</p>
-                    <div class="p-2 sm:p-2.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-xl">
-                        <i data-lucide="alert-triangle" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <p class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Hotspot</p>
+                    <div class="p-1.5 sm:p-2.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-xl">
+                        <i data-lucide="alert-triangle" class="w-3.5 h-3.5 sm:w-5 sm:h-5"></i>
                     </div>
                 </div>
                 <div class="mt-2">
                     <div class="flex items-baseline gap-1">
-                        <span id="kpiHotspotDb" class="text-2xl sm:text-3xl font-extrabold text-rose-500">89 dB</span>
+                        <span id="kpiHotspotDb" class="text-xl sm:text-3xl font-extrabold text-rose-500">89 dB</span>
                     </div>
-                    <p id="kpiHotspotLocation" class="text-[10px] sm:text-xs font-medium text-slate-400 mt-1 truncate max-w-[130px] sm:max-w-[150px]">
+                    <p id="kpiHotspotLocation" class="text-[10px] sm:text-xs font-medium text-slate-400 mt-0.5 truncate max-w-[110px] sm:max-w-[150px]">
                         Detecting...</p>
                 </div>
             </div>
 
             <!-- Card 3: Dynamic Citizen Complaints -->
             <div
-                class="bg-slate-900/60 backdrop-blur-md p-3.5 sm:p-5 rounded-2xl border border-slate-800/80 shadow-xl shadow-black/30 flex flex-col justify-between hover:border-slate-700/80 transition-all">
+                class="bg-slate-900/60 backdrop-blur-md p-3 sm:p-5 rounded-2xl border border-slate-800/80 shadow-xl shadow-black/30 flex flex-col justify-between hover:border-slate-700/80 transition-all">
                 <div class="flex items-center justify-between">
-                    <p class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Complaints</p>
-                    <div class="p-2 sm:p-2.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-xl">
-                        <i data-lucide="file-text" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <p class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Complaints</p>
+                    <div class="p-1.5 sm:p-2.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-xl">
+                        <i data-lucide="file-text" class="w-3.5 h-3.5 sm:w-5 sm:h-5"></i>
                     </div>
                 </div>
                 <div class="mt-2">
                     <div class="flex items-baseline gap-1">
                         <span id="citizenComplaintsCount"
-                            class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">0</span>
+                            class="text-xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">0</span>
                     </div>
-                    <p class="text-[10px] sm:text-xs font-medium text-slate-400 mt-1">Last 7 days</p>
+                    <p class="text-[10px] sm:text-xs font-medium text-slate-400 mt-0.5">Last 7 days</p>
                 </div>
             </div>
 
             <!-- Card 4 -->
             <div
-                class="bg-slate-900/60 backdrop-blur-md p-3.5 sm:p-5 rounded-2xl border border-slate-800/80 shadow-xl shadow-black/30 flex flex-col justify-between hover:border-slate-700/80 transition-all">
+                class="bg-slate-900/60 backdrop-blur-md p-3 sm:p-5 rounded-2xl border border-slate-800/80 shadow-xl shadow-black/30 flex flex-col justify-between hover:border-slate-700/80 transition-all">
                 <div class="flex items-center justify-between">
-                    <p class="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Alerts</p>
-                    <div class="p-2 sm:p-2.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-xl">
-                        <i data-lucide="bell" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <p class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Alerts</p>
+                    <div class="p-1.5 sm:p-2.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-xl">
+                        <i data-lucide="bell" class="w-3.5 h-3.5 sm:w-5 sm:h-5"></i>
                     </div>
                 </div>
                 <div class="mt-2">
                     <div class="flex items-baseline gap-1">
-                        <span class="text-2xl sm:text-3xl font-extrabold text-amber-400">4</span>
+                        <span class="text-xl sm:text-3xl font-extrabold text-amber-400">4</span>
                     </div>
-                    <p class="text-[10px] sm:text-xs font-medium text-rose-400 mt-1 flex items-center gap-1">
+                    <p class="text-[10px] sm:text-xs font-medium text-rose-400 mt-0.5 flex items-center gap-1">
                         Requires action
                     </p>
                 </div>
@@ -181,20 +179,20 @@
 
         <!-- Dedicated User Live Tracking Map View -->
         <section
-            class="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-4 sm:p-5 shadow-xl shadow-black/30 space-y-3 sm:space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2.5 sm:gap-3">
+            class="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-3.5 sm:p-5 shadow-xl shadow-black/30 space-y-3 sm:space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
                     <div class="p-2 sm:p-2.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-xl">
                         <i data-lucide="crosshair" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                     </div>
                     <div>
-                        <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Live Movement & Location</h2>
-                        <p class="text-[11px] sm:text-xs text-slate-400">Continuous GPS tracking & hotspot proximity scan</p>
+                        <h2 class="text-sm sm:text-base md:text-lg font-bold text-white tracking-tight">Live Movement & Location</h2>
+                        <p class="text-[10px] sm:text-xs text-slate-400">Continuous GPS tracking & hotspot proximity scan</p>
                     </div>
                 </div>
 
                 <button id="locateUserBtn" type="button"
-                    class="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/30 transition-all">
+                    class="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/30 transition-all">
                     <i data-lucide="locate" class="w-3.5 h-3.5"></i>
                     <span>Re-Center GPS</span>
                 </button>
@@ -205,48 +203,48 @@
                 <span>Acquiring live GPS stream...</span>
             </div>
 
-            <div id="userLocationMap" class="w-full h-60 sm:h-72 rounded-xl border border-slate-800 z-10 overflow-hidden"></div>
+            <div id="userLocationMap" class="w-full h-56 sm:h-72 rounded-xl border border-slate-800 z-10 overflow-hidden"></div>
         </section>
 
         <!-- Geographic Heatmap & Authority Action Panel -->
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8">
 
             <!-- Interactive Regional Hotspot Heatmap -->
             <div
-                class="lg:col-span-2 bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-4 sm:p-5 shadow-xl shadow-black/30 flex flex-col">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-4">
+                class="lg:col-span-2 bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-3.5 sm:p-5 shadow-xl shadow-black/30 flex flex-col">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                     <div>
                         <div class="flex items-center gap-2">
-                            <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Urban Noise Heatmap</h2>
+                            <h2 class="text-sm sm:text-base md:text-lg font-bold text-white tracking-tight">Urban Noise Heatmap</h2>
                             <span id="mapAreaBadge"
                                 class="text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Ludhiana Hub</span>
                         </div>
-                        <p class="text-[11px] sm:text-xs text-slate-400">Sensor clusters & critical threshold zones</p>
+                        <p class="text-[10px] sm:text-xs text-slate-400">Sensor clusters & critical threshold zones</p>
                     </div>
-                    <div class="flex items-center gap-2.5 text-[10px] sm:text-xs font-semibold flex-wrap">
+                    <div class="flex items-center gap-2 text-[10px] sm:text-xs font-semibold flex-wrap">
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> &lt;60dB</span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> 60-75dB</span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> &gt;75dB</span>
                     </div>
                 </div>
-                <div id="map" class="w-full h-64 sm:h-80 rounded-xl border border-slate-800 z-10 flex-1"></div>
+                <div id="map" class="w-full h-60 sm:h-80 rounded-xl border border-slate-800 z-10 flex-1"></div>
             </div>
 
             <!-- Smart Alerts & Recommendations Card -->
             <div
-                class="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-4 sm:p-5 shadow-xl shadow-black/30 flex flex-col justify-between">
+                class="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-3.5 sm:p-5 shadow-xl shadow-black/30 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Smart Alert Insight</h2>
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-sm sm:text-base md:text-lg font-bold text-white tracking-tight">Smart Alert Insight</h2>
                         <span id="alertStatusBadge"
-                            class="px-2 py-0.5 rounded-full text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">Critical</span>
+                            class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">Critical</span>
                     </div>
 
-                    <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 mb-4 space-y-2">
+                    <div class="p-3 sm:p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 mb-4 space-y-2">
                         <div class="flex justify-between items-center text-xs sm:text-sm">
                             <span class="text-slate-400 font-medium">Nearest Hotspot:</span>
                             <span id="alertHotspotName"
-                                class="font-bold text-white truncate max-w-[140px] sm:max-w-[160px]">Scanning...</span>
+                                class="font-bold text-white truncate max-w-[130px] sm:max-w-[160px]">Scanning...</span>
                         </div>
                         <div class="flex justify-between items-center text-xs sm:text-sm">
                             <span class="text-slate-400 font-medium">Recorded Noise:</span>
@@ -259,29 +257,29 @@
                         <div class="flex justify-between items-center text-xs sm:text-sm">
                             <span class="text-slate-400 font-medium">Primary Source:</span>
                             <span id="alertHotspotSource"
-                                class="font-semibold text-slate-200 truncate max-w-[130px] sm:max-w-[150px]">Traffic</span>
+                                class="font-semibold text-slate-200 truncate max-w-[120px] sm:max-w-[150px]">Traffic</span>
                         </div>
                     </div>
 
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Recommended Actions</h3>
-                    <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+                    <h3 class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Recommended Actions</h3>
+                    <ul class="space-y-1.5 text-xs text-slate-300">
                         <li class="flex items-start gap-2">
-                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
-                            <span>Increase traffic management & patrol</span>
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            <span>Increase traffic management</span>
                         </li>
                         <li class="flex items-start gap-2">
-                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
-                            <span>Enforce anti-honking regulations</span>
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            <span>Enforce anti-honking rules</span>
                         </li>
                         <li class="flex items-start gap-2">
-                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
-                            <span>Monitor zone proactively (6:00 PM – 9:00 PM)</span>
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            <span>Monitor zone (6:00 PM – 9:00 PM)</span>
                         </li>
                     </ul>
                 </div>
 
                 <button id="dispatchNoticeBtn"
-                    class="w-full mt-5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium py-2.5 px-4 rounded-xl text-xs sm:text-sm transition-all shadow-md">
+                    class="w-full mt-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium py-2 px-3 rounded-xl text-xs sm:text-sm transition-all shadow-md">
                     Dispatch Notice to Authorities
                 </button>
             </div>
@@ -289,44 +287,44 @@
         </section>
 
         <!-- REALTIME DIGITAL NOISE METER & CITIZEN REPORTING GRID -->
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8">
 
             <!-- DIGITAL SOUND LEVEL METER -->
             <div
-                class="lg:col-span-2 bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-4 sm:p-5 shadow-xl shadow-black/30 flex flex-col justify-between">
+                class="lg:col-span-2 bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-3.5 sm:p-5 shadow-xl shadow-black/30 flex flex-col justify-between">
 
                 <!-- Header with Live Pulse and Mic Toggle -->
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/80">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
                     <div>
                         <div class="flex items-center gap-2">
-                            <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Realtime Noise Analyzer</h2>
+                            <h2 class="text-sm sm:text-base md:text-lg font-bold text-white tracking-tight">Realtime Noise Analyzer</h2>
                             <span
-                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-950/60 text-red-400 border border-red-500/30">
+                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-red-950/60 text-red-400 border border-red-500/30">
                                 <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
                                 ACTIVE
                             </span>
                         </div>
-                        <p class="text-[11px] sm:text-xs text-slate-400">Live telemetry across GPS coordinates</p>
+                        <p class="text-[10px] sm:text-xs text-slate-400">Live telemetry across coordinates</p>
                     </div>
 
                     <button id="toggleMicBtn" type="button"
-                        class="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-400 border border-indigo-500/30 text-xs font-semibold transition-all">
+                        class="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-400 border border-indigo-500/30 text-xs font-semibold transition-all">
                         <i data-lucide="mic" class="w-3.5 h-3.5"></i>
                         <span id="micBtnText">Enable Hardware Mic</span>
                     </button>
                 </div>
 
                 <!-- Digital Gauges Container -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 my-4 sm:my-6 items-center">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4 items-center">
 
                     <!-- Exact Location Dial & Readout -->
                     <div
-                        class="flex flex-col items-center justify-center p-4 bg-slate-950/70 border border-slate-800/80 rounded-2xl text-center relative overflow-hidden">
-                        <p class="text-[11px] font-bold uppercase tracking-wider text-indigo-400 mb-1">Your Location</p>
-                        <p id="userLiveZoneName" class="text-xs text-slate-400 truncate max-w-[180px] mb-3">Syncing GPS...</p>
+                        class="flex flex-col items-center justify-center p-3 sm:p-4 bg-slate-950/70 border border-slate-800/80 rounded-2xl text-center relative overflow-hidden">
+                        <p class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-indigo-400 mb-1">Your Location</p>
+                        <p id="userLiveZoneName" class="text-xs text-slate-400 truncate max-w-[160px] sm:max-w-[180px] mb-2">Syncing GPS...</p>
 
                         <!-- Circular VU Ring (SVG) -->
-                        <div class="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center">
+                        <div class="relative w-28 h-28 sm:w-36 sm:h-36 flex items-center justify-center">
                             <svg class="w-full h-full -rotate-90 transform" viewBox="0 0 120 120">
                                 <circle cx="60" cy="60" r="48" stroke="currentColor" stroke-width="8"
                                     class="text-slate-800 fill-none" />
@@ -339,13 +337,13 @@
                             <div class="absolute inset-0 flex flex-col items-center justify-center">
                                 <span id="userLiveDb"
                                     class="text-2xl sm:text-3xl font-black text-white font-mono tracking-tighter">54.0</span>
-                                <span class="text-[10px] font-bold text-slate-400 tracking-wider">dBA</span>
+                                <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 tracking-wider">dBA</span>
                             </div>
                         </div>
 
                         <!-- Peak & Classification Indicators -->
                         <div
-                            class="flex items-center justify-between w-full mt-3 pt-2 border-t border-slate-800/70 text-[11px]">
+                            class="flex items-center justify-between w-full mt-3 pt-2 border-t border-slate-800/70 text-[10px] sm:text-[11px]">
                             <span class="text-slate-500 font-mono">PEAK: <span id="userPeakDb"
                                     class="text-slate-300 font-bold">58 dB</span></span>
                             <span id="userLevelTag"
@@ -354,7 +352,7 @@
                     </div>
 
                     <!-- Hotspot Multi-Channel Rack Meters -->
-                    <div class="md:col-span-2 space-y-2 sm:space-y-3" id="hotspotMetersContainer">
+                    <div class="md:col-span-2 space-y-2" id="hotspotMetersContainer">
                         <!-- Dynamically populated via JS -->
                     </div>
 
@@ -362,80 +360,80 @@
 
                 <!-- Meter Legend & Safety Thresholds Footer -->
                 <div
-                    class="p-3 bg-slate-950/40 border border-slate-800/60 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
-                    <div class="flex items-center gap-3 sm:gap-4 text-slate-400 text-[10px] sm:text-[11px] flex-wrap">
+                    class="p-2.5 sm:p-3 bg-slate-950/40 border border-slate-800/60 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+                    <div class="flex items-center gap-2 sm:gap-4 text-slate-400 text-[10px] sm:text-[11px] flex-wrap">
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-emerald-400"></span> &lt;55 dB (Safe)</span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-amber-400"></span> 55-75 dB (Moderate)</span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-rose-500"></span> &gt;75 dB (Hazardous)</span>
                     </div>
-                    <span class="text-slate-500 font-mono text-[10px]">Sampling: 100ms FFT</span>
+                    <span class="text-slate-500 font-mono text-[9px] sm:text-[10px]">Sampling: 100ms FFT</span>
                 </div>
 
             </div>
 
             <!-- Citizen Reporting Form -->
             <div id="report-form"
-                class="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-4 sm:p-5 shadow-xl shadow-black/30 scroll-mt-20">
-                <h2 class="text-base sm:text-lg font-bold text-white tracking-tight mb-1">Citizen Noise Report</h2>
-                <p class="text-xs text-slate-400 mb-4">Submit abnormal disturbances directly to the registry</p>
+                class="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-3.5 sm:p-5 shadow-xl shadow-black/30 scroll-mt-20">
+                <h2 class="text-sm sm:text-base md:text-lg font-bold text-white tracking-tight mb-0.5">Citizen Noise Report</h2>
+                <p class="text-[11px] sm:text-xs text-slate-400 mb-3">Submit disturbances directly to registry</p>
 
-                <form id="citizenNoiseForm" class="space-y-3">
+                <form id="citizenNoiseForm" class="space-y-2.5 sm:space-y-3">
 
                     <!-- Citizen Identity Fields -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                         <div>
-                            <label class="block text-[11px] sm:text-xs font-semibold text-slate-300 mb-1">Your Full Name</label>
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Full Name</label>
                             <input id="userNameInput" type="text" placeholder="e.g. John Doe" required
-                                class="w-full px-3 py-2 text-base sm:text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+                                class="w-full px-3 py-2 text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
                         </div>
                         <div>
-                            <label class="block text-[11px] sm:text-xs font-semibold text-slate-300 mb-1">Phone Number</label>
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Phone Number</label>
                             <input id="userPhoneInput" type="tel" placeholder="+91 987XX XXXXX" required
-                                class="w-full px-3 py-2 text-base sm:text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+                                class="w-full px-3 py-2 text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[11px] sm:text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Email Address</label>
                         <input id="userEmailInput" type="email" placeholder="abc@example.com" required
-                            class="w-full px-3 py-2 text-base sm:text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+                            class="w-full px-3 py-2 text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
                     </div>
 
                     <!-- Incident Details -->
                     <div>
-                        <label class="block text-[11px] sm:text-xs font-semibold text-slate-300 mb-1">Location / Landmark</label>
+                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Location / Landmark</label>
                         <input id="reportLocationInput" type="text" placeholder="Scanning nearest hotspot..." required
-                            class="w-full px-3 py-2 text-base sm:text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+                            class="w-full px-3 py-2 text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-2 gap-2 sm:gap-3">
                         <div>
-                            <label class="block text-[11px] sm:text-xs font-semibold text-slate-300 mb-1">Noise Level (dB)</label>
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Est. dB Level</label>
                             <input id="reportDbInput" type="number" min="30" max="140" placeholder="e.g. 85" required
-                                class="w-full px-3 py-2 text-base sm:text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+                                class="w-full px-3 py-2 text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
                         </div>
                         <div>
-                            <label class="block text-[11px] sm:text-xs font-semibold text-slate-300 mb-1">Source</label>
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Noise Source</label>
                             <select id="reportSourceInput"
-                                class="w-full px-3 py-2 text-base sm:text-sm bg-slate-950 border border-slate-800 rounded-lg text-slate-100 focus:outline-none focus:border-indigo-500">
-                                <option value="Traffic / Honking">Traffic / Honking</option>
-                                <option value="Construction Site">Construction Site</option>
-                                <option value="Loudspeakers / Events">Loudspeakers / Events</option>
-                                <option value="Industrial Machines">Industrial Machines</option>
+                                class="w-full px-2 sm:px-3 py-2 text-sm bg-slate-950 border border-slate-800 rounded-lg text-slate-100 focus:outline-none focus:border-indigo-500">
+                                <option value="Traffic / Honking">Traffic</option>
+                                <option value="Construction Site">Construction</option>
+                                <option value="Loudspeakers / Events">Events</option>
+                                <option value="Industrial Machines">Industrial</option>
                                 <option value="Other">Other</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[11px] sm:text-xs font-semibold text-slate-300 mb-1">Description (Optional)</label>
+                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Description (Optional)</label>
                         <textarea id="reportDescInput" rows="2" placeholder="Provide extra details..."
-                            class="w-full px-3 py-2 text-base sm:text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"></textarea>
+                            class="w-full px-3 py-2 text-sm bg-slate-950/70 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"></textarea>
                     </div>
 
                     <button id="submitReportBtn" type="submit"
-                        class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-indigo-600/30">
-                        Submit Incident Report
+                        class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 rounded-xl text-sm transition-all shadow-lg shadow-indigo-600/30">
+                        Submit Report
                     </button>
                 </form>
             </div>
@@ -466,7 +464,7 @@
                     }
                 }
             } catch (err) {
-                // Keep local storage count if backend is starting up
+                // Keep local storage count if offline
             }
         }
         fetchCitizenComplaints();
@@ -497,11 +495,10 @@
             attribution: '© OpenStreetMap'
         }).addTo(userMap);
 
-        // Map invalidate size for mobile rendering
         setTimeout(() => {
             regionalMap.invalidateSize();
             userMap.invalidateSize();
-        }, 500);
+        }, 400);
 
         let userMarker = null;
         let userRadiusCircle = null;
@@ -512,7 +509,7 @@
             allHotspots.forEach(spot => {
                 const markerColor = spot.baseDb > 75 ? '#ef4444' : (spot.baseDb >= 60 ? '#f59e0b' : '#10b981');
                 L.circleMarker(spot.coords, {
-                    radius: 10,
+                    radius: 8,
                     fillColor: markerColor,
                     color: '#ffffff',
                     weight: 2,
@@ -551,17 +548,17 @@
             allHotspots.forEach(spot => {
                 const meterCard = document.createElement('div');
                 meterCard.id = `rack-${spot.id}`;
-                meterCard.className = "p-2.5 sm:p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 transition-all flex flex-col gap-1.5";
+                meterCard.className = "p-2 sm:p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 transition-all flex flex-col gap-1";
                 meterCard.innerHTML = `
           <div class="flex items-center justify-between text-xs">
-            <span class="font-bold text-white truncate max-w-[170px] sm:max-w-[220px]">${spot.label}</span>
-            <div class="flex items-center gap-2">
-              <span id="dist-${spot.id}" class="text-[10px] text-slate-500 font-mono">--</span>
-              <span id="val-${spot.id}" class="font-mono font-bold text-xs sm:text-sm text-slate-100">${spot.baseDb} dB</span>
+            <span class="font-bold text-white truncate max-w-[150px] sm:max-w-[200px] text-[11px] sm:text-xs">${spot.label}</span>
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+              <span id="dist-${spot.id}" class="text-[9px] sm:text-[10px] text-slate-500 font-mono">--</span>
+              <span id="val-${spot.id}" class="font-mono font-bold text-[11px] sm:text-xs text-slate-100">${spot.baseDb} dB</span>
             </div>
           </div>
           <!-- Segmented LED Bar -->
-          <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden flex gap-0.5 p-0.5">
+          <div class="w-full bg-slate-900 h-1.5 sm:h-2 rounded-full overflow-hidden flex gap-0.5 p-0.5">
             <div id="bar-${spot.id}" class="h-full rounded-full transition-all duration-300" style="width: ${(spot.baseDb / 110) * 100}%;"></div>
           </div>
         `;
@@ -589,13 +586,13 @@
 
                     if (spot.currentDb >= 75) {
                         barEl.className = "h-full rounded-full bg-gradient-to-r from-amber-500 to-rose-500";
-                        valEl.className = "font-mono font-bold text-xs sm:text-sm text-rose-400";
+                        valEl.className = "font-mono font-bold text-xs text-rose-400";
                     } else if (spot.currentDb >= 60) {
                         barEl.className = "h-full rounded-full bg-amber-400";
-                        valEl.className = "font-mono font-bold text-xs sm:text-sm text-amber-400";
+                        valEl.className = "font-mono font-bold text-xs text-amber-400";
                     } else {
                         barEl.className = "h-full rounded-full bg-emerald-400";
-                        valEl.className = "font-mono font-bold text-xs sm:text-sm text-emerald-400";
+                        valEl.className = "font-mono font-bold text-xs text-emerald-400";
                     }
                 }
             });
@@ -627,16 +624,16 @@
 
             if (db >= 75) {
                 meterCircle.setAttribute('class', 'text-rose-500 fill-none transition-all duration-300 stroke-round');
-                tagEl.className = "px-2 py-0.5 rounded font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20";
+                tagEl.className = "px-1.5 py-0.5 rounded font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20";
                 tagEl.textContent = "Critical";
             } else if (db >= 60) {
                 meterCircle.setAttribute('class', 'text-amber-400 fill-none transition-all duration-300 stroke-round');
-                tagEl.className = "px-2 py-0.5 rounded font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20";
+                tagEl.className = "px-1.5 py-0.5 rounded font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20";
                 tagEl.textContent = "Moderate";
             } else {
                 meterCircle.setAttribute('class', 'text-emerald-400 fill-none transition-all duration-300 stroke-round');
-                tagEl.className = "px-2 py-0.5 rounded font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
-                tagEl.textContent = "Quiet / Safe";
+                tagEl.className = "px-1.5 py-0.5 rounded font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+                tagEl.textContent = "Safe";
             }
         }
 
@@ -675,16 +672,16 @@
                     };
 
                     isMicActive = true;
-                    micBtnText.textContent = "Mic Live (Active)";
-                    toggleMicBtn.className = "w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-900/60 text-emerald-300 border border-emerald-500/40 text-xs font-semibold transition-all";
+                    micBtnText.textContent = "Mic Active";
+                    toggleMicBtn.className = "w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-900/60 text-emerald-300 border border-emerald-500/40 text-xs font-semibold transition-all";
                 } catch (err) {
-                    alert('Microphone permission denied or unsupported in this browser.');
+                    alert('Microphone permission denied.');
                 }
             } else {
                 if (audioContext) audioContext.close();
                 isMicActive = false;
                 micBtnText.textContent = "Enable Hardware Mic";
-                toggleMicBtn.className = "w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-400 border border-indigo-500/30 text-xs font-semibold transition-all";
+                toggleMicBtn.className = "w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-400 border border-indigo-500/30 text-xs font-semibold transition-all";
             }
         });
 
@@ -721,13 +718,13 @@
 
             const badge = document.getElementById('alertStatusBadge');
             if (closestSpot.baseDb > 75) {
-                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30";
+                badge.className = "px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30";
                 badge.textContent = "Critical";
             } else if (closestSpot.baseDb >= 60) {
-                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30";
+                badge.className = "px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30";
                 badge.textContent = "Moderate";
             } else {
-                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
+                badge.className = "px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
                 badge.textContent = "Normal";
             }
 
@@ -740,19 +737,19 @@
 
             if (minDistance <= 1500 && closestSpot.status !== "Low") {
                 banner.classList.remove('hidden');
-                desc.textContent = `You are near ${closestSpot.label}. Recorded noise: ${closestSpot.baseDb} dB (${closestSpot.source}).`;
+                desc.textContent = `You are near ${closestSpot.label}. Noise: ${closestSpot.baseDb} dB.`;
                 distBadge.textContent = distText;
 
                 if (closestSpot.baseDb > 75) {
-                    banner.className = "p-3.5 sm:p-4 rounded-2xl border bg-rose-950/60 border-rose-500/40 text-rose-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4";
+                    banner.className = "p-3 sm:p-4 rounded-2xl border bg-rose-950/60 border-rose-500/40 text-rose-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3";
                     iconBox.className = "p-2 sm:p-2.5 rounded-xl bg-rose-500/20 text-rose-400 flex-shrink-0";
-                    distBadge.className = "text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 sm:py-1 rounded-full border bg-rose-500/20 text-rose-300 border-rose-500/40 self-start sm:self-auto";
-                    title.textContent = `High Noise Hotspot Warning (${closestSpot.baseDb} dB)`;
+                    distBadge.className = "text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full border bg-rose-500/20 text-rose-300 border-rose-500/40 self-start sm:self-auto";
+                    title.textContent = `Warning: High Noise Hotspot (${closestSpot.baseDb} dB)`;
                 } else {
-                    banner.className = "p-3.5 sm:p-4 rounded-2xl border bg-amber-950/60 border-amber-500/40 text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4";
+                    banner.className = "p-3 sm:p-4 rounded-2xl border bg-amber-950/60 border-amber-500/40 text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3";
                     iconBox.className = "p-2 sm:p-2.5 rounded-xl bg-amber-500/20 text-amber-400 flex-shrink-0";
-                    distBadge.className = "text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 sm:py-1 rounded-full border bg-amber-500/20 text-amber-300 border-amber-500/40 self-start sm:self-auto";
-                    title.textContent = `Moderate Noise Notice (${closestSpot.baseDb} dB)`;
+                    distBadge.className = "text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full border bg-amber-500/20 text-amber-300 border-amber-500/40 self-start sm:self-auto";
+                    title.textContent = `Moderate Noise (${closestSpot.baseDb} dB)`;
                 }
             } else {
                 banner.classList.add('hidden');
@@ -770,7 +767,7 @@
             const badgeEl = document.getElementById('mapAreaBadge');
 
             if (!navigator.geolocation) {
-                statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span><span class="text-rose-400">Geolocation not supported by your browser.</span>`;
+                statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span><span class="text-rose-400">Geolocation unsupported.</span>`;
                 updateNearbyHotspotUI(fallbackCoords[0], fallbackCoords[1]);
                 return;
             }
@@ -794,22 +791,21 @@
                     }).addTo(userMap);
 
                     userMarker = L.circleMarker([latitude, longitude], {
-                        radius: 7,
+                        radius: 6,
                         fillColor: '#4f46e5',
                         color: '#ffffff',
-                        weight: 2.5,
+                        weight: 2,
                         opacity: 1,
                         fillOpacity: 1
                     }).addTo(userMap).bindPopup(`
             <div class="text-xs text-slate-800">
-              <b>You are here</b><br/>
-              Lat: ${latitude.toFixed(4)}, Lng: ${longitude.toFixed(4)}
+              <b>You are here</b>
             </div>
           `);
 
                     statusEl.innerHTML = `
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-emerald-400 font-medium">Live GPS Tracking Active (±${Math.round(accuracy)}m)</span>
+            <span class="text-emerald-400 font-medium">GPS Active (±${Math.round(accuracy)}m)</span>
           `;
 
                     badgeEl.textContent = `Tracking (${latitude.toFixed(2)}, ${longitude.toFixed(2)})`;
@@ -818,7 +814,7 @@
                     updateNearbyHotspotUI(latitude, longitude);
                 },
                 (err) => {
-                    statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span><span class="text-rose-400">GPS signal unavailable (${err.message}). Using fallback region.</span>`;
+                    statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span><span class="text-rose-400">GPS unavailable. Using fallback.</span>`;
                     updateNearbyHotspotUI(fallbackCoords[0], fallbackCoords[1]);
                 },
                 { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 }
@@ -863,9 +859,8 @@
 
                 const data = await res.json();
                 if (res.ok) {
-                    alert(`Success: ${data.message || 'Report submitted successfully!'}`);
+                    alert(`Success: ${data.message || 'Report submitted!'}`);
                     e.target.reset();
-                    // Increment counter and persist locally
                     currentComplaintsCount += 1;
                     localStorage.setItem('noise_complaints_count', currentComplaintsCount);
                     if (countEl) countEl.textContent = currentComplaintsCount;
@@ -873,15 +868,14 @@
                     alert(`Error: ${data.error}`);
                 }
             } catch (err) {
-                // Client-side fallback if app.py is offline
                 currentComplaintsCount += 1;
                 localStorage.setItem('noise_complaints_count', currentComplaintsCount);
                 if (countEl) countEl.textContent = currentComplaintsCount;
-                alert('Incident report logged locally (Backend unreachable).');
+                alert('Incident logged locally.');
                 e.target.reset();
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Submit Incident Report';
+                btn.textContent = 'Submit Report';
             }
         });
 
@@ -889,7 +883,7 @@
         document.getElementById('dispatchNoticeBtn').addEventListener('click', () => {
             const activeHotspot = document.getElementById('alertHotspotName').textContent;
             const noise = document.getElementById('alertHotspotDb').textContent;
-            alert(`Official notice and recommended actions for "${activeHotspot}" (${noise}) dispatched to local authorities!`);
+            alert(`Notice dispatched for "${activeHotspot}" (${noise})!`);
         });
 
         document.querySelector('a[href="#report-form"]').addEventListener('click', (e) => {
@@ -905,7 +899,7 @@
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/static/sw.js')
-                .then(() => console.log('PWA Service Worker Registered'))
+                .then(() => console.log('PWA Registered'))
                 .catch((err) => console.error('PWA registration failed:', err));
         }
 
@@ -919,15 +913,23 @@
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
             
-            // Mobile-adapted camera distance
             function getCameraZ() {
-                return window.innerWidth < 640 ? 3.4 : 2.5;
+                return window.innerWidth < 640 ? 3.5 : 2.5;
             }
             camera.position.z = getCameraZ();
 
             const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            
+            function resizeViewport() {
+                const width = document.documentElement.clientWidth || window.innerWidth;
+                const height = window.innerHeight;
+                camera.aspect = width / height;
+                camera.position.z = getCameraZ();
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+            }
+            resizeViewport();
 
             const textureLoader = new THREE.TextureLoader();
             const earthMap = textureLoader.load(
@@ -935,21 +937,21 @@
                 () => renderer.render(scene, camera)
             );
 
-            const globeGeo = new THREE.SphereGeometry(1, 48, 48); // Optimized segment count for mobile performance
+            const globeGeo = new THREE.SphereGeometry(1, 40, 40);
             const globeMat = new THREE.MeshPhongMaterial({
                 map: earthMap,
-                shininess: 12,
+                shininess: 10,
                 color: 0xa5b4fc
             });
             const earth = new THREE.Mesh(globeGeo, globeMat);
             earth.rotation.z = 0.41;
             scene.add(earth);
 
-            const atmoGeo = new THREE.SphereGeometry(1.025, 48, 48);
+            const atmoGeo = new THREE.SphereGeometry(1.025, 40, 40);
             const atmoMat = new THREE.MeshBasicMaterial({
                 color: 0x6366f1,
                 transparent: true,
-                opacity: 0.16,
+                opacity: 0.15,
                 side: THREE.BackSide,
                 blending: THREE.AdditiveBlending
             });
@@ -958,7 +960,7 @@
 
             const starsGeo = new THREE.BufferGeometry();
             const starCoords = [];
-            const starsCount = window.innerWidth < 640 ? 350 : 700;
+            const starsCount = window.innerWidth < 640 ? 250 : 600;
             for (let i = 0; i < starsCount; i++) {
                 starCoords.push(
                     (Math.random() - 0.5) * 20,
@@ -979,12 +981,7 @@
             scene.add(direct);
 
             window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.position.z = getCameraZ();
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-
-                // Re-invalidate map sizes on orientation change or screen resize
+                resizeViewport();
                 if (typeof regionalMap !== 'undefined') regionalMap.invalidateSize();
                 if (typeof userMap !== 'undefined') userMap.invalidateSize();
             });
@@ -998,7 +995,6 @@
             }
             render();
         })();
-        
     </script>
 </body>
 
