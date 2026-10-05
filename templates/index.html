@@ -97,7 +97,6 @@
             --canvas-overlay: linear-gradient(to bottom, rgba(7, 11, 20, 0.75), rgba(7, 11, 20, 0.9), #070b14);
         }
 
-        /* Smooth UI transitions excluding dynamic graphs & canvases */
         body, header, nav, main, section, footer, div, p, span, h1, h2, h3, a, button, input, select, textarea {
             transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
         }
@@ -106,7 +105,6 @@
             transition: none !important;
         }
 
-        /* Map styling per theme */
         html.dark .leaflet-tile {
             filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
         }
@@ -162,13 +160,12 @@
                 <a href="#check-noise" class="hover:text-indigo-600 dark:hover:text-white transition-colors">Check Noise</a>
                 <a href="#educational-scale" class="hover:text-indigo-600 dark:hover:text-white transition-colors">Safe Levels</a>
                 <a href="#how-it-works" class="hover:text-indigo-600 dark:hover:text-white transition-colors">How It Works</a>
+                <a href="#cse-students" class="hover:text-indigo-600 dark:hover:text-white transition-colors">CSE Students</a>
                 <a href="#report-form" class="text-rose-500 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 transition-colors">Report</a>
             </nav>
 
             <!-- Quick Action Controls & Theme Toggle -->
             <div class="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
-                
-                <!-- Modern Theme Toggle Button -->
                 <button id="themeToggleBtn" type="button" aria-label="Toggle light or dark theme"
                     class="p-2 sm:px-3 sm:py-1.5 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] hover:bg-[var(--card-sub-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all flex items-center gap-1.5 shadow-sm active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <i id="themeIconSun" data-lucide="sun" class="w-4 h-4 hidden text-amber-500"></i>
@@ -176,21 +173,18 @@
                     <span id="themeToggleText" class="text-xs font-semibold hidden lg:inline">Light</span>
                 </button>
 
-                <!-- Admin Access Button -->
                 <a href="/login"
                     class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] hover:bg-[var(--card-sub-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-semibold transition-all shadow-sm">
                     <i data-lucide="shield" class="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400"></i>
                     <span>Admin</span>
                 </a>
 
-                <!-- Report Noise Quick Action -->
                 <a href="#report-form"
                     class="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs sm:text-sm font-bold shadow-md shadow-rose-600/25 transition-all">
                     <i data-lucide="megaphone" class="w-3.5 h-3.5"></i>
                     <span>Report Noise</span>
                 </a>
 
-                <!-- Mobile Hamburger Toggle -->
                 <button id="mobileMenuBtn" type="button" aria-label="Toggle Navigation Menu"
                     class="md:hidden p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--card-sub-bg)] focus:outline-none">
                     <i data-lucide="menu" class="w-5 h-5"></i>
@@ -205,6 +199,7 @@
             <a href="#check-noise" class="mobile-nav-link block py-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]">Check Noise</a>
             <a href="#educational-scale" class="mobile-nav-link block py-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]">Safe Levels</a>
             <a href="#how-it-works" class="mobile-nav-link block py-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]">How It Works</a>
+            <a href="#cse-students" class="mobile-nav-link block py-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]">CSE Students</a>
             <a href="#report-form" class="mobile-nav-link block py-2 text-rose-500 dark:text-rose-400 font-semibold">Report Noise</a>
             
             <div class="pt-2 border-t border-[var(--border-color)] flex items-center justify-between">
@@ -319,7 +314,7 @@
                     </div>
                     <div class="mt-3">
                         <div class="flex items-baseline gap-1.5 font-mono">
-                            <span id="kpiHotspotDb" class="text-3xl font-black text-rose-600 dark:text-rose-400">89 dB</span>
+                            <span id="kpiHotspotDb" class="text-3xl font-black text-rose-600 dark:text-rose-400">-- dB</span>
                         </div>
                         <p id="kpiHotspotLocation" class="text-xs text-[var(--text-secondary)] mt-1 truncate max-w-full font-medium">
                             Scanning area...
@@ -350,26 +345,39 @@
             </div>
         </section>
 
-        <!-- NOISE AROUND YOU: INTERACTIVE MAP -->
+        <!-- NOISE AROUND YOU: INTERACTIVE MAP & USER-CENTRIC CONTROLS -->
         <section id="noise-map" class="space-y-4 scroll-mt-20" aria-labelledby="map-heading">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[var(--card-bg)] border border-[var(--border-color)] p-4 sm:p-5 rounded-2xl shadow-sm">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[var(--card-bg)] border border-[var(--border-color)] p-4 sm:p-5 rounded-2xl shadow-sm">
                 <div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 flex-wrap">
                         <h2 id="map-heading" class="text-lg sm:text-xl font-bold text-[var(--text-primary)] tracking-tight flex items-center gap-2">
-                            <span>🗺️ Noise Around You</span>
+                            <span>🗺 Noise Around You</span>
                         </h2>
                         <span id="mapAreaBadge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30">
-                            Ludhiana Hub
+                            Detecting Area...
                         </span>
                     </div>
                     <p class="text-xs sm:text-sm text-[var(--text-secondary)] mt-0.5">
-                        See where noise pollution is highest in your area and find quiet zones.
+                        Live noise pollution hotspots and active stations within 15 km of your location.
                     </p>
                 </div>
 
-                <div class="flex flex-wrap items-center gap-3">
+                <!-- User Geolocation & Manual Hub Selector Fallback -->
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <div class="flex items-center gap-1.5 text-xs bg-[var(--card-sub-bg)] border border-[var(--border-color)] rounded-xl px-2.5 py-1.5">
+                        <label for="hubSelector" class="text-[var(--text-muted)] font-medium">Hub:</label>
+                        <select id="hubSelector" class="bg-transparent font-semibold text-[var(--text-primary)] focus:outline-none cursor-pointer">
+                            <option value="auto">📍 Live GPS (Auto)</option>
+                            <option value="30.9010,75.8573,Ludhiana">Ludhiana, PB</option>
+                            <option value="30.7333,76.7794,Chandigarh">Chandigarh, UT</option>
+                            <option value="28.6139,77.2090,Delhi">Delhi NCR</option>
+                            <option value="19.0760,72.8777,Mumbai">Mumbai, MH</option>
+                            <option value="12.9716,77.5946,Bengaluru">Bengaluru, KA</option>
+                        </select>
+                    </div>
+
                     <button id="locateUserBtn" type="button"
-                        class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-md">
+                        class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-md active:scale-95">
                         <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
                         <span>📍 Find My Location</span>
                     </button>
@@ -394,7 +402,7 @@
                         <span class="w-2 h-2 rounded-full bg-rose-500"></span> High (&gt;75dB)
                     </span>
                     <span id="locationStatus" class="w-full sm:w-auto text-[11px] text-[var(--text-muted)] border-t sm:border-t-0 sm:border-l border-[var(--border-color)] pt-1.5 sm:pt-0 sm:pl-3 flex items-center gap-1.5 font-medium">
-                        <span class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500"></span> Standby
+                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Acquiring location...
                     </span>
                 </div>
             </div>
@@ -403,7 +411,7 @@
         <!-- CHECK NOISE NEAR YOU & SMART ALERTS -->
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
 
-            <!-- Real-time Noise Analyzer -->
+            <!-- Real-time Noise Analyzer & Dynamic Nearby Sensors -->
             <div id="check-noise" class="lg:col-span-2 p-5 sm:p-6 rounded-2xl bg-[var(--card-bg)] border border-[var(--border-color)] shadow-sm space-y-5 scroll-mt-20">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--border-color)]">
                     <div>
@@ -450,11 +458,16 @@
                         </div>
                     </div>
 
-                    <!-- Sensor Rack Readouts -->
-                    <div class="sm:col-span-2 space-y-2.5">
-                        <p class="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Nearby Sensor Readouts</p>
+                    <!-- Dynamic Nearby Sensors & Citizen Reports Rack -->
+                    <div class="sm:col-span-2 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Nearby Sensor Readouts</p>
+                            <span id="sensorRadiusTag" class="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium">within 15 km</span>
+                        </div>
                         <div id="hotspotMetersContainer" class="space-y-2">
-                            <!-- Populated dynamically via JS -->
+                            <div class="p-4 rounded-xl bg-[var(--card-sub-bg)] border border-[var(--border-color)] text-center text-xs text-[var(--text-muted)]">
+                                <span class="inline-block animate-spin mr-1.5">◌</span> Scanning active stations in your area...
+                            </div>
                         </div>
                     </div>
 
@@ -483,7 +496,7 @@
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-[var(--text-muted)]">Distance from you:</span>
-                        <span id="alertHotspotDist" class="font-semibold text-[var(--text-secondary)]">--</span>
+                        <span id="alertHotspotDist" class="font-semibold text-secondary">--</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-[var(--text-muted)]">Primary Source:</span>
@@ -693,6 +706,66 @@
             </p>
         </section>
 
+        <!-- CSE STUDENTS SECTION -->
+        <section id="cse-students" class="max-w-3xl mx-auto py-4 space-y-5 scroll-mt-20" aria-labelledby="cse-students-heading">
+            <div class="text-center space-y-1.5">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                    <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+                    <span>Department of Computer Science & Engineering</span>
+                </div>
+                <h2 id="cse-students-heading" class="text-xl sm:text-2xl font-bold text-[var(--text-primary)] tracking-tight">
+                    CSE Students
+                </h2>
+                <p class="text-xs sm:text-sm text-[var(--text-muted)] font-normal">
+                    Created by students of Computer Science & Engineering
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                <!-- Student 1: Manish Singh -->
+                <div class="group p-4 sm:p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-indigo-500/50 hover:shadow-lg dark:hover:shadow-indigo-950/30 hover:-translate-y-0.5 transition-all flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white font-extrabold text-base shadow-md shadow-indigo-500/25 flex-shrink-0 group-hover:scale-105 transition-transform">
+                        MS
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-1">
+                            <h3 class="text-sm sm:text-base font-bold text-[var(--text-primary)] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+                                Manish Singh
+                            </h3>
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                CSE Student
+                            </span>
+                        </div>
+                        <p class="text-xs text-[var(--text-secondary)] mt-0.5 font-medium flex items-center gap-1.5">
+                            <i data-lucide="code" class="w-3.5 h-3.5 text-indigo-500"></i>
+                            <span>Computer Science & Engineering</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Student 2: Aashish Jaiswal -->
+                <div class="group p-4 sm:p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-indigo-500/50 hover:shadow-lg dark:hover:shadow-indigo-950/30 hover:-translate-y-0.5 transition-all flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-white font-extrabold text-base shadow-md shadow-indigo-500/25 flex-shrink-0 group-hover:scale-105 transition-transform">
+                        AJ
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-1">
+                            <h3 class="text-sm sm:text-base font-bold text-[var(--text-primary)] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+                                Aashish Jaiswal
+                            </h3>
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 flex-shrink-0">
+                                CSE Student
+                            </span>
+                        </div>
+                        <p class="text-xs text-[var(--text-secondary)] mt-0.5 font-medium flex items-center gap-1.5">
+                            <i data-lucide="code" class="w-3.5 h-3.5 text-indigo-500"></i>
+                            <span>Computer Science & Engineering</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- FOOTER -->
@@ -706,6 +779,7 @@
                 <a href="#dashboard" class="hover:text-[var(--text-primary)] transition-colors">Home</a>
                 <a href="#noise-map" class="hover:text-[var(--text-primary)] transition-colors">Noise Map</a>
                 <a href="#report-form" class="hover:text-[var(--text-primary)] transition-colors">Report</a>
+                <a href="#cse-students" class="hover:text-[var(--text-primary)] transition-colors">CSE Students</a>
                 <a href="/login" class="hover:text-[var(--text-primary)] transition-colors">Admin Login</a>
             </div>
         </div>
@@ -713,11 +787,22 @@
 
     <!-- INTERACTIVE JAVASCRIPT -->
     <script>
-        // Hoist Leaflet map instances to top of script scope to prevent TDZ ReferenceErrors
         let regionalMap = null;
         let userMap = null;
+        let heatLayer = null;
+        let markerGroup = null;
+        let userMarker = null;
+        let userRadiusCircle = null;
+        let currentPosition = null;
 
-        // Initialize Lucide icons
+        let allHotspots = [];
+        let isFetchingSensors = false;
+        let userCurrentDb = 54.0;
+        let userPeakDb = 58.0;
+        let isMicActive = false;
+
+        const fallbackCoords = [30.9010, 75.8573]; // Default Ludhiana Center
+
         lucide.createIcons();
 
         // 1. Theme Controller Logic
@@ -758,7 +843,6 @@
                 if (mobileThemeToggleText) mobileThemeToggleText.textContent = 'Light Mode';
             }
 
-            // Safely refresh map viewports if already initialized
             if (regionalMap) regionalMap.invalidateSize();
             if (userMap) userMap.invalidateSize();
             lucide.createIcons();
@@ -807,17 +891,7 @@
         }
         fetchCitizenComplaints();
 
-        // Regional Hotspot Network
-        const fallbackCoords = [30.9010, 75.8573];
-        const allHotspots = [
-            { id: 'spot-1', coords: [30.9125, 75.8535], baseDb: 89, currentDb: 89, status: "Critical", label: "Clock Tower / Chaura Bazar", source: "Heavy Traffic & Market" },
-            { id: 'spot-2', coords: [30.8986, 75.8617], baseDb: 84, currentDb: 84, status: "Critical", label: "Central Bus Terminal (ISBT)", source: "Bus Horns & Engines" },
-            { id: 'spot-3', coords: [30.8920, 75.8235], baseDb: 76, currentDb: 76, status: "Elevated", label: "Ferozepur Road / Aarti Chowk", source: "Transit Congestion" },
-            { id: 'spot-4', coords: [30.8875, 75.8340], baseDb: 67, currentDb: 67, status: "Moderate", label: "Model Town Market", source: "Commercial Activity" },
-            { id: 'spot-5', coords: [30.9022, 75.8115], baseDb: 44, currentDb: 44, status: "Low", label: "PAU Campus / Rakh Bagh", source: "Quiet / Park Zone" }
-        ];
-
-        // Maps Initialization
+        // 2. Initialize Leaflet Maps
         regionalMap = L.map('map', { zoomControl: true }).setView(fallbackCoords, 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -833,25 +907,26 @@
             }).addTo(userMap);
         }
 
+        markerGroup = L.layerGroup().addTo(regionalMap);
+
         setTimeout(() => {
             if (regionalMap) regionalMap.invalidateSize();
             if (userMap) userMap.invalidateSize();
         }, 400);
 
-        let heatLayer = null;
-        const markerGroup = L.layerGroup().addTo(regionalMap);
-
         function renderHeatmap() {
             if (typeof L.heatLayer !== 'function') return;
+
+            if (heatLayer && regionalMap.hasLayer(heatLayer)) {
+                regionalMap.removeLayer(heatLayer);
+            }
+
+            if (!allHotspots || allHotspots.length === 0) return;
 
             const heatData = allHotspots.map(spot => {
                 const intensity = Math.min(1.0, Math.max(0.15, (spot.currentDb - 35) / 60));
                 return [spot.coords[0], spot.coords[1], intensity];
             });
-
-            if (heatLayer && regionalMap.hasLayer(heatLayer)) {
-                regionalMap.removeLayer(heatLayer);
-            }
 
             heatLayer = L.heatLayer(heatData, {
                 radius: 40,
@@ -868,7 +943,11 @@
         }
 
         function renderHotspotSensors() {
+            if (!markerGroup) return;
             markerGroup.clearLayers();
+
+            if (!allHotspots || allHotspots.length === 0) return;
+
             allHotspots.forEach(spot => {
                 const markerColor = spot.currentDb > 75 ? '#ef4444' : (spot.currentDb >= 60 ? '#f59e0b' : '#10b981');
 
@@ -891,49 +970,111 @@
                     <div class="text-xs text-slate-900 font-sans p-1">
                         <b class="text-sm font-bold">${spot.label}</b><br/>
                         Noise Level: <span class="font-bold font-mono text-indigo-700">${spot.currentDb} dB</span><br/>
+                        Distance: <b>${spot.distance_formatted || 'Nearby'}</b><br/>
                         Status: <b style="color:${markerColor}">${spot.status}</b><br/>
-                        Main Source: <i>${spot.source}</i>
+                        Source: <i>${spot.source}</i>
                     </div>
                 `);
             });
         }
 
-        renderHeatmap();
-        renderHotspotSensors();
+        // 3. Dynamic Nearby Sensors API Fetcher & UI Renderer
+        async function fetchNearbySensors(lat, lng, radiusKm = 15, locationName = null) {
+            if (isFetchingSensors) return;
+            isFetchingSensors = true;
 
-        const bounds = L.latLngBounds(allHotspots.map(s => s.coords));
-        regionalMap.fitBounds(bounds, { padding: [25, 25] });
+            const metersContainer = document.getElementById('hotspotMetersContainer');
+            const badgeEl = document.getElementById('mapAreaBadge');
 
-        let userMarker = null;
-        let userRadiusCircle = null;
-        let currentPosition = null;
+            if (metersContainer && allHotspots.length === 0) {
+                metersContainer.innerHTML = `
+                    <div class="p-4 rounded-xl bg-[var(--card-sub-bg)] border border-[var(--border-color)] text-center text-xs text-[var(--text-muted)]">
+                        <span class="inline-block animate-spin mr-1.5">◌</span> Querying stations within ${radiusKm} km...
+                    </div>
+                `;
+            }
 
-        function getDistanceInMeters(lat1, lon1, lat2, lon2) {
-            const R = 6371e3;
-            const toRad = deg => (deg * Math.PI) / 180;
-            const dLat = toRad(lat2 - lat1);
-            const dLon = toRad(lon2 - lon1);
-            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            try {
+                const res = await fetch(`/api/nearby-sensors?lat=${lat}&lng=${lng}&radius_km=${radiusKm}`);
+                const data = await res.json();
+
+                if (res.ok && data.status === 'success') {
+                    allHotspots = data.sensors || [];
+
+                    if (badgeEl) {
+                        const areaLabel = locationName || (allHotspots.length > 0 && allHotspots[0].city ? `${allHotspots[0].city} Hub` : `${lat.toFixed(2)}, ${lng.toFixed(2)}`);
+                        badgeEl.textContent = areaLabel;
+                    }
+
+                    renderNearbySensorsUI(data, radiusKm);
+                    renderHeatmap();
+                    renderHotspotSensors();
+                    updateNearbyHotspotUI(lat, lng);
+
+                    if (allHotspots.length > 0 && regionalMap) {
+                        const points = allHotspots.map(s => s.coords);
+                        points.push([lat, lng]);
+                        const bounds = L.latLngBounds(points);
+                        regionalMap.fitBounds(bounds, { padding: [35, 35], maxZoom: 14 });
+                    } else if (regionalMap) {
+                        regionalMap.setView([lat, lng], 13);
+                    }
+                } else {
+                    renderNearbySensorsError(data.error || 'Unable to retrieve nearby stations.');
+                }
+            } catch (err) {
+                renderNearbySensorsError('Network error connecting to sensor telemetry.');
+            } finally {
+                isFetchingSensors = false;
+            }
         }
 
-        // Digital Sound Level Meters
-        const metersContainer = document.getElementById('hotspotMetersContainer');
-
-        function initHotspotMeters() {
+        function renderNearbySensorsUI(data, radiusKm) {
+            const metersContainer = document.getElementById('hotspotMetersContainer');
             if (!metersContainer) return;
+
             metersContainer.innerHTML = '';
+
+            if (data.type === 'crowdsourced') {
+                const banner = document.createElement('div');
+                banner.className = "p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-[11px] flex items-center gap-2";
+                banner.innerHTML = `<i data-lucide="info" class="w-4 h-4 flex-shrink-0"></i><span>No hardware stations within ${radiusKm} km. Displaying live citizen reports in your area.</span>`;
+                metersContainer.appendChild(banner);
+            }
+
+            if (data.count === 0 || allHotspots.length === 0) {
+                metersContainer.innerHTML = `
+                    <div class="p-5 rounded-2xl bg-[var(--card-sub-bg)] border border-[var(--border-color)] text-center space-y-2">
+                        <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 text-[var(--text-muted)] flex items-center justify-center mx-auto text-lg">
+                            📍
+                        </div>
+                        <h4 class="text-xs font-bold text-[var(--text-primary)]">No active stations within ${radiusKm} km</h4>
+                        <p class="text-[11px] text-[var(--text-muted)] max-w-xs mx-auto">
+                            No hardware sensors or noise logs recorded nearby yet. Help your community by reporting noise!
+                        </p>
+                        <a href="#report-form" class="inline-block mt-1 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold shadow-sm transition-all">
+                            Submit First Report
+                        </a>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
             allHotspots.forEach(spot => {
                 const meterCard = document.createElement('div');
                 meterCard.id = `rack-${spot.id}`;
                 meterCard.className = "p-2.5 rounded-xl bg-[var(--card-sub-bg)] border border-[var(--border-color)] transition-all flex flex-col gap-1.5";
+                
+                const typeIcon = spot.is_hardware ? '📡' : '👤';
                 meterCard.innerHTML = `
                     <div class="flex items-center justify-between text-xs">
-                        <span class="font-semibold text-[var(--text-primary)] truncate max-w-[170px] sm:max-w-[210px] text-xs">${spot.label}</span>
+                        <div class="flex items-center gap-1.5 truncate max-w-[170px] sm:max-w-[210px]">
+                            <span class="text-[11px]">${typeIcon}</span>
+                            <span class="font-semibold text-[var(--text-primary)] truncate">${spot.label}</span>
+                        </div>
                         <div class="flex items-center gap-2 flex-shrink-0">
-                            <span id="dist-${spot.id}" class="text-[10px] text-[var(--text-muted)] font-mono">--</span>
+                            <span id="dist-${spot.id}" class="text-[10px] text-[var(--text-muted)] font-mono font-medium">${spot.distance_formatted || '--'}</span>
                             <span id="val-${spot.id}" class="font-mono font-bold text-xs text-[var(--text-primary)]">${spot.baseDb} dB</span>
                         </div>
                     </div>
@@ -943,14 +1084,25 @@
                 `;
                 metersContainer.appendChild(meterCard);
             });
+
+            lucide.createIcons();
         }
-        initHotspotMeters();
 
-        let userCurrentDb = 54.0;
-        let userPeakDb = 58.0;
-        let isMicActive = false;
+        function renderNearbySensorsError(msg) {
+            const metersContainer = document.getElementById('hotspotMetersContainer');
+            if (metersContainer) {
+                metersContainer.innerHTML = `
+                    <div class="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs text-center">
+                        ${msg}
+                    </div>
+                `;
+            }
+        }
 
+        // 4. Live Decibel Simulation
         function updateDigitalMeters() {
+            if (!allHotspots || allHotspots.length === 0) return;
+
             allHotspots.forEach(spot => {
                 const delta = (Math.random() * 3.6 - 1.8);
                 spot.currentDb = Math.min(115, Math.max(35, parseFloat((spot.baseDb + delta).toFixed(1))));
@@ -1027,7 +1179,7 @@
 
         setInterval(updateDigitalMeters, 250);
 
-        // Hardware Mic Stream (Web Audio API)
+        // 5. Hardware Microphone Stream (Web Audio API)
         let audioContext = null;
         let analyser = null;
         let microphone = null;
@@ -1077,7 +1229,6 @@
                         alert('Microphone access unavailable or denied. Check your browser permissions.');
                     }
                 } else {
-                    // Safe and complete hardware microphone release
                     if (audioStream) {
                         audioStream.getTracks().forEach(track => track.stop());
                         audioStream = null;
@@ -1107,35 +1258,30 @@
             });
         }
 
-        // Proximity Alerts Logic
+        // 6. Proximity Alert & Nearest Hotspot Sync
         function updateNearbyHotspotUI(userLat, userLng) {
-            let closestSpot = null;
-            let minDistance = Infinity;
-
-            allHotspots.forEach(spot => {
-                const dist = getDistanceInMeters(userLat, userLng, spot.coords[0], spot.coords[1]);
-                const distEl = document.getElementById(`dist-${spot.id}`);
-                if (distEl) {
-                    distEl.textContent = dist < 1000 ? `${Math.round(dist)}m` : `${(dist / 1000).toFixed(1)}km`;
-                }
-                if (dist < minDistance) {
-                    minDistance = dist;
-                    closestSpot = spot;
-                }
-            });
-
-            if (!closestSpot) return;
-
-            const distKm = (minDistance / 1000).toFixed(2);
-            const distText = minDistance < 1000 ? `${Math.round(minDistance)} m away` : `${distKm} km away`;
-
-            const zoneNameEl = document.getElementById('userLiveZoneName');
             const kpiLocEl = document.getElementById('kpiHotspotLocation');
             const kpiDbEl = document.getElementById('kpiHotspotDb');
             const alertNameEl = document.getElementById('alertHotspotName');
             const alertDbEl = document.getElementById('alertHotspotDb');
             const alertDistEl = document.getElementById('alertHotspotDist');
             const alertSourceEl = document.getElementById('alertHotspotSource');
+            const zoneNameEl = document.getElementById('userLiveZoneName');
+            const banner = document.getElementById('proximityAlertBanner');
+
+            if (!allHotspots || allHotspots.length === 0) {
+                if (kpiLocEl) kpiLocEl.textContent = "No hotspots within 15 km";
+                if (kpiDbEl) kpiDbEl.textContent = "-- dB";
+                if (alertNameEl) alertNameEl.textContent = "Quiet Area";
+                if (alertDbEl) alertDbEl.textContent = "-- dB";
+                if (alertDistEl) alertDistEl.textContent = "No nearby stations";
+                if (zoneNameEl) zoneNameEl.textContent = "Current Area Safe";
+                if (banner) banner.classList.add('hidden');
+                return;
+            }
+
+            const closestSpot = allHotspots[0];
+            const distText = closestSpot.distance_formatted || `${closestSpot.distance_km} km`;
 
             if (zoneNameEl) zoneNameEl.textContent = `Near ${closestSpot.label}`;
             if (kpiLocEl) kpiLocEl.textContent = closestSpot.label;
@@ -1143,7 +1289,7 @@
 
             if (alertNameEl) alertNameEl.textContent = closestSpot.label;
             if (alertDbEl) alertDbEl.textContent = `${closestSpot.baseDb} dB`;
-            if (alertDistEl) alertDistEl.textContent = distText;
+            if (alertDistEl) alertDistEl.textContent = `${distText} away`;
             if (alertSourceEl) alertSourceEl.textContent = closestSpot.source;
 
             const badge = document.getElementById('alertStatusBadge');
@@ -1160,28 +1306,25 @@
                 }
             }
 
-            const banner = document.getElementById('proximityAlertBanner');
-            const title = document.getElementById('proximityTitle');
-            const desc = document.getElementById('proximityDesc');
-            const distBadge = document.getElementById('proximityDistBadge');
-            const iconBox = document.getElementById('proximityIconBox');
+            if (banner) {
+                const title = document.getElementById('proximityTitle');
+                const desc = document.getElementById('proximityDesc');
+                const distBadge = document.getElementById('proximityDistBadge');
+                const iconBox = document.getElementById('proximityIconBox');
 
-            if (banner && title && desc && distBadge && iconBox) {
-                if (minDistance <= 1500 && closestSpot.status !== "Low") {
+                if (closestSpot.distance_km <= 1.5 && closestSpot.status !== "Safe") {
                     banner.classList.remove('hidden');
-                    desc.textContent = `You are near ${closestSpot.label}. Noise level: ${closestSpot.baseDb} dB.`;
-                    distBadge.textContent = distText;
+                    if (desc) desc.textContent = `You are near ${closestSpot.label}. Noise level: ${closestSpot.baseDb} dB.`;
+                    if (distBadge) distBadge.textContent = distText;
 
                     if (closestSpot.baseDb > 75) {
                         banner.className = "p-4 rounded-xl border bg-rose-50 dark:bg-rose-950/60 border-rose-200 dark:border-rose-500/40 text-rose-900 dark:text-rose-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md";
-                        iconBox.className = "p-2.5 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 flex-shrink-0";
-                        distBadge.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full border bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-500/40 self-start sm:self-auto font-mono";
-                        title.textContent = `High-Noise Warning Area (${closestSpot.baseDb} dB)`;
+                        if (iconBox) iconBox.className = "p-2.5 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 flex-shrink-0";
+                        if (title) title.textContent = `High-Noise Warning Area (${closestSpot.baseDb} dB)`;
                     } else {
                         banner.className = "p-4 rounded-xl border bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-500/40 text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md";
-                        iconBox.className = "p-2.5 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex-shrink-0";
-                        distBadge.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full border bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-500/40 self-start sm:self-auto font-mono";
-                        title.textContent = `Moderate Noise Area (${closestSpot.baseDb} dB)`;
+                        if (iconBox) iconBox.className = "p-2.5 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex-shrink-0";
+                        if (title) title.textContent = `Moderate Noise Area (${closestSpot.baseDb} dB)`;
                     }
                 } else {
                     banner.classList.add('hidden');
@@ -1194,86 +1337,110 @@
             }
         }
 
-        // Initialize immediate data view with default hub coordinates
-        updateNearbyHotspotUI(fallbackCoords[0], fallbackCoords[1]);
-
-        // Live GPS Geolocation Tracking
-        function startLiveMovementTracking() {
+        // 7. Geolocation Controller with Graceful Fallback
+        function initializeUserGeolocation() {
             const statusEl = document.getElementById('locationStatus');
-            const badgeEl = document.getElementById('mapAreaBadge');
 
             if (!navigator.geolocation) {
-                if (statusEl) statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span><span class="text-rose-600 dark:text-rose-400">GPS unsupported</span>`;
-                updateNearbyHotspotUI(fallbackCoords[0], fallbackCoords[1]);
+                if (statusEl) statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span><span class="text-rose-600 dark:text-rose-400">Geolocation not supported</span>`;
+                fetchNearbySensors(fallbackCoords[0], fallbackCoords[1], 15, "Ludhiana (Default Hub)");
                 return;
             }
 
-            navigator.geolocation.watchPosition(
-                (position) => {
-                    const { latitude, longitude, accuracy } = position.coords;
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const { latitude, longitude, accuracy } = pos.coords;
                     currentPosition = [latitude, longitude];
-
-                    if (regionalMap) regionalMap.panTo([latitude, longitude]);
-                    if (userMap) userMap.panTo([latitude, longitude]);
-
-                    if (userMarker && regionalMap) regionalMap.removeLayer(userMarker);
-                    if (userRadiusCircle && regionalMap) regionalMap.removeLayer(userRadiusCircle);
-
-                    if (regionalMap) {
-                        userRadiusCircle = L.circle([latitude, longitude], {
-                            radius: accuracy,
-                            color: '#6366f1',
-                            fillColor: '#818cf8',
-                            fillOpacity: 0.15,
-                            weight: 1
-                        }).addTo(regionalMap);
-
-                        userMarker = L.circleMarker([latitude, longitude], {
-                            radius: 7,
-                            fillColor: '#6366f1',
-                            color: '#ffffff',
-                            weight: 2,
-                            opacity: 1,
-                            fillOpacity: 1
-                        }).addTo(regionalMap).bindPopup(`
-                            <div class="text-xs text-slate-800 font-sans">
-                                <b>You are here</b><br/>Accuracy: ±${Math.round(accuracy)}m
-                            </div>
-                        `);
-                    }
 
                     if (statusEl) {
                         statusEl.innerHTML = `
                             <span class="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
-                            <span class="text-emerald-600 dark:text-emerald-400 font-semibold font-mono">GPS Active (±${Math.round(accuracy)}m)</span>
+                            <span class="text-emerald-600 dark:text-emerald-400 font-semibold font-mono">Live GPS (±${Math.round(accuracy)}m)</span>
                         `;
                     }
 
-                    if (badgeEl) {
-                        badgeEl.textContent = `GPS Active (${latitude.toFixed(2)}, ${longitude.toFixed(2)})`;
-                        badgeEl.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30";
-                    }
-
-                    updateNearbyHotspotUI(latitude, longitude);
+                    updateUserMapMarker(latitude, longitude, accuracy);
+                    fetchNearbySensors(latitude, longitude, 15);
                 },
                 (err) => {
                     if (statusEl) {
-                        statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500"></span><span class="text-amber-600 dark:text-amber-400">Using City Center</span>`;
+                        statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500"></span><span class="text-amber-600 dark:text-amber-400">GPS Denied • Using Default Hub</span>`;
                     }
-                    updateNearbyHotspotUI(fallbackCoords[0], fallbackCoords[1]);
+                    fetchNearbySensors(fallbackCoords[0], fallbackCoords[1], 15, "Ludhiana (Default Hub)");
                 },
-                { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 }
+                { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
             );
+
+            navigator.geolocation.watchPosition(
+                (pos) => {
+                    const { latitude, longitude, accuracy } = pos.coords;
+                    currentPosition = [latitude, longitude];
+                    updateUserMapMarker(latitude, longitude, accuracy);
+                },
+                null,
+                { enableHighAccuracy: true, maximumAge: 5000 }
+            );
+        }
+
+        function updateUserMapMarker(latitude, longitude, accuracy) {
+            if (!regionalMap) return;
+
+            if (userMarker) regionalMap.removeLayer(userMarker);
+            if (userRadiusCircle) regionalMap.removeLayer(userRadiusCircle);
+
+            userRadiusCircle = L.circle([latitude, longitude], {
+                radius: accuracy || 30,
+                color: '#6366f1',
+                fillColor: '#818cf8',
+                fillOpacity: 0.15,
+                weight: 1
+            }).addTo(regionalMap);
+
+            userMarker = L.circleMarker([latitude, longitude], {
+                radius: 7,
+                fillColor: '#6366f1',
+                color: '#ffffff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 1
+            }).addTo(regionalMap).bindPopup(`
+                <div class="text-xs text-slate-800 font-sans">
+                    <b>You are here</b><br/>Accuracy: ±${Math.round(accuracy || 30)}m
+                </div>
+            `);
         }
 
         const locateBtn = document.getElementById('locateUserBtn');
         if (locateBtn) {
             locateBtn.addEventListener('click', () => {
                 if (currentPosition) {
-                    if (regionalMap) regionalMap.setView(currentPosition, 15);
-                    if (userMap) userMap.setView(currentPosition, 15);
+                    if (regionalMap) regionalMap.setView(currentPosition, 14);
+                    fetchNearbySensors(currentPosition[0], currentPosition[1], 15);
                 } else {
-                    startLiveMovementTracking();
+                    initializeUserGeolocation();
+                }
+            });
+        }
+
+        const hubSelector = document.getElementById('hubSelector');
+        if (hubSelector) {
+            hubSelector.addEventListener('change', (e) => {
+                const val = e.target.value;
+                if (val === 'auto') {
+                    initializeUserGeolocation();
+                } else {
+                    const parts = val.split(',');
+                    const lat = parseFloat(parts[0]);
+                    const lng = parseFloat(parts[1]);
+                    const name = parts[2];
+                    currentPosition = [lat, lng];
+                    
+                    const statusEl = document.getElementById('locationStatus');
+                    if (statusEl) {
+                        statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-indigo-500"></span><span class="text-indigo-600 dark:text-indigo-400">Viewing ${name} Hub</span>`;
+                    }
+                    updateUserMapMarker(lat, lng, 100);
+                    fetchNearbySensors(lat, lng, 15, `${name} Hub`);
                 }
             });
         }
@@ -1287,7 +1454,7 @@
                 } else if (alertName && alertName !== 'Scanning...') {
                     locInput.value = `Near ${alertName}`;
                 } else {
-                    locInput.value = "Ludhiana Center";
+                    locInput.value = "Current Location";
                 }
             }
         });
@@ -1297,9 +1464,9 @@
             if (dbInput) dbInput.value = Math.round(userCurrentDb);
         });
 
-        startLiveMovementTracking();
+        initializeUserGeolocation();
 
-        // Form Submission Handler
+        // 8. Form Submission Handler
         const citizenForm = document.getElementById('citizenNoiseForm');
         if (citizenForm) {
             citizenForm.addEventListener('submit', async (e) => {
@@ -1314,7 +1481,7 @@
                 const phoneVal = document.getElementById('userPhoneInput')?.value.trim() || 'Not Provided';
                 const emailVal = document.getElementById('userEmailInput')?.value.trim() || 'citizen@noisewatch.org';
                 const locInput = document.getElementById('reportLocationInput');
-                const locVal = locInput?.value.trim() || locInput?.placeholder || 'Ludhiana';
+                const locVal = locInput?.value.trim() || locInput?.placeholder || 'Current Area';
                 const dbVal = parseFloat(document.getElementById('reportDbInput')?.value || '60');
                 const sourceVal = document.getElementById('reportSourceInput')?.value || 'Other';
                 const descVal = document.getElementById('reportDescInput')?.value.trim() || '';
@@ -1344,6 +1511,10 @@
                         currentComplaintsCount += 1;
                         localStorage.setItem('noise_complaints_count', currentComplaintsCount);
                         if (countEl) countEl.textContent = currentComplaintsCount;
+
+                        if (currentPosition) {
+                            fetchNearbySensors(currentPosition[0], currentPosition[1], 15);
+                        }
                     } else {
                         const data = await res.json().catch(() => ({ error: 'Submission failed' }));
                         alert(`Notice: ${data.error || 'Saved locally'}`);
@@ -1389,7 +1560,6 @@
             try {
                 renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
             } catch (err) {
-                console.warn('WebGL background initialization bypassed:', err);
                 return;
             }
 
