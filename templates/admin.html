@@ -1,96 +1,248 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NoiseWatch - Authority Enforcement Panel</title>
+    <!-- Anti-FOUC Theme Initializer -->
+    <script>
+        (function () {
+            try {
+                const savedTheme = localStorage.getItem('noisewatch_theme');
+                if (savedTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --card-bg: #ffffff;
+            --card-sub-bg: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --nav-bg: rgba(255, 255, 255, 0.92);
+            --input-bg: #ffffff;
+        }
+
+        html.dark {
+            --bg-primary: #070b14;
+            --bg-secondary: #0a0f1d;
+            --card-bg: rgba(13, 20, 36, 0.85);
+            --card-sub-bg: rgba(2, 6, 23, 0.7);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: rgba(51, 65, 85, 0.8);
+            --nav-bg: rgba(10, 15, 29, 0.92);
+            --input-bg: #020617;
+        }
+
+        body, header, nav, main, section, footer, div, p, span, h1, h2, a, button, select, table, th, td {
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+    </style>
 </head>
 
-<body class="bg-slate-950 text-slate-100 min-h-screen p-6 antialiased font-sans">
+<body class="bg-[var(--bg-primary)] text-[var(--text-primary)] min-h-screen antialiased font-sans flex flex-col selection:bg-indigo-600 selection:text-white">
 
-    <div class="max-w-7xl mx-auto space-y-6">
-
-        <!-- Top Bar -->
-        <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-800">
-            <div>
-                <h1 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-                    <span>Authority Incident Log</span>
-                    <span
-                        class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">Official
-                        Portal</span>
-                </h1>
-                <p class="text-xs text-slate-400 mt-1">Review verified citizen noise complaints, user contacts, and
-                    manage field investigations</p>
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-30 w-full bg-[var(--nav-bg)] backdrop-blur-md border-b border-[var(--border-color)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+            
+            <div class="flex items-center gap-3">
+                <a href="/" class="flex items-center gap-2 group flex-shrink-0" title="Return to Public Dashboard">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/20 group-hover:bg-indigo-500 transition-colors">
+                        <i data-lucide="volume-2" class="w-5 h-5"></i>
+                    </div>
+                </a>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-sm sm:text-base font-extrabold text-[var(--text-primary)] tracking-tight">Authority Incident Log</h1>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30">Official Portal</span>
+                    </div>
+                    <p class="text-[11px] text-[var(--text-muted)] font-medium hidden sm:block">Verify citizen noise complaints, contact logs, and field investigations</p>
+                </div>
             </div>
 
-            <div class="flex items-center gap-3">
+            <!-- Action Controls -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                <!-- Theme Toggle Button -->
+                <button id="themeToggleBtn" type="button" aria-label="Toggle light or dark theme"
+                    class="p-2 sm:px-3 sm:py-1.5 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-semibold shadow-sm flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 active:scale-95 transition-all">
+                    <i id="themeIconSun" data-lucide="sun" class="w-4 h-4 hidden text-amber-500"></i>
+                    <i id="themeIconMoon" data-lucide="moon" class="w-4 h-4 text-indigo-500 dark:text-indigo-400"></i>
+                    <span id="themeToggleText" class="hidden sm:inline">Light</span>
+                </button>
+
                 <a href="/"
-                    class="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-xs font-semibold text-slate-300 transition-colors">
-                    Public Dashboard
+                    class="px-3 py-1.5 rounded-xl bg-[var(--card-bg)] border border-[var(--border-color)] hover:bg-[var(--card-sub-bg)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <span class="hidden sm:inline">Citizen Dashboard</span>
+                    <span class="sm:hidden">Public</span>
                 </a>
+
                 <button onclick="loadReports()"
-                    class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition-colors flex items-center gap-1.5">
+                    class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white transition-all shadow-md shadow-indigo-600/20 flex items-center gap-1.5">
                     <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                     <span>Refresh</span>
                 </button>
-                <!-- LOGOUT BUTTON -->
+
                 <a href="/logout"
-                    class="px-3.5 py-1.5 rounded-xl bg-rose-950/60 border border-rose-500/30 hover:bg-rose-900/60 text-xs font-semibold text-rose-300 transition-colors">
-                    Logout
+                    class="px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-500/30 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-xs font-semibold text-rose-700 dark:text-rose-300 transition-all flex items-center gap-1.5">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span class="hidden sm:inline">Logout</span>
                 </a>
             </div>
 
         </div>
-    </div>
+    </header>
 
-    <!-- Stats Bar -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl">
-            <p class="text-xs text-slate-400 uppercase font-semibold">Total Reports</p>
-            <span id="statTotal" class="text-2xl font-bold text-white font-mono">0</span>
-        </div>
-        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl">
-            <p class="text-xs text-slate-400 uppercase font-semibold">Critical Violations (&gt;75 dB)</p>
-            <span id="statCritical" class="text-2xl font-bold text-rose-500 font-mono">0</span>
-        </div>
-        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl">
-            <p class="text-xs text-slate-400 uppercase font-semibold">Pending Action</p>
-            <span id="statPending" class="text-2xl font-bold text-amber-400 font-mono">0</span>
-        </div>
-    </div>
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-    <!-- Data Table -->
-    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-                <thead class="bg-slate-950/80 text-xs uppercase font-semibold text-slate-400 border-b border-slate-800">
-                    <tr>
-                        <th class="px-4 py-3">ID</th>
-                        <th class="px-4 py-3">Citizen Contact</th>
-                        <th class="px-4 py-3">Location & Coords</th>
-                        <th class="px-4 py-3">Noise Level</th>
-                        <th class="px-4 py-3">Source & Notes</th>
-                        <th class="px-4 py-3">Logged At</th>
-                        <th class="px-4 py-3">Status Action</th>
-                    </tr>
-                </thead>
-                <tbody id="reportsTableBody" class="divide-y divide-slate-800/60 text-xs">
-                    <tr>
-                        <td colspan="7" class="px-4 py-8 text-center text-slate-500">Loading reports from
-                            database...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <!-- Stat Summary Bar -->
+        <section class="grid grid-cols-1 sm:grid-cols-3 gap-4" aria-label="Incident Summary Metrics">
+            <div class="bg-[var(--card-bg)] border border-[var(--border-color)] p-4 sm:p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-[var(--text-muted)] uppercase tracking-wider font-bold">Total Reports</p>
+                    <span id="statTotal" class="text-3xl font-extrabold text-[var(--text-primary)] font-mono mt-1 block">0</span>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 text-[var(--text-secondary)] border border-[var(--border-color)]">
+                    <i data-lucide="folder-kanban" class="w-5 h-5"></i>
+                </div>
+            </div>
 
-    </div>
+            <div class="bg-[var(--card-bg)] border border-[var(--border-color)] p-4 sm:p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-[var(--text-muted)] uppercase tracking-wider font-bold">Critical Violations (&gt;75 dB)</p>
+                    <span id="statCritical" class="text-3xl font-extrabold text-rose-600 dark:text-rose-400 font-mono mt-1 block">0</span>
+                </div>
+                <div class="p-3 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                    <i data-lucide="alert-octagon" class="w-5 h-5"></i>
+                </div>
+            </div>
+
+            <div class="bg-[var(--card-bg)] border border-[var(--border-color)] p-4 sm:p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-[var(--text-muted)] uppercase tracking-wider font-bold">Pending Action</p>
+                    <span id="statPending" class="text-3xl font-extrabold text-amber-600 dark:text-amber-400 font-mono mt-1 block">0</span>
+                </div>
+                <div class="p-3 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Incident Registry Table -->
+        <section class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-sm">
+            <div class="p-4 border-b border-[var(--border-color)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="table" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+                    <h2 class="text-sm font-bold text-[var(--text-primary)] tracking-tight">Active Noise Disturbance Registry</h2>
+                </div>
+                <div class="flex items-center gap-3 text-xs text-[var(--text-muted)]">
+                    <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Critical (&gt;75dB)</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Moderate (60-75dB)</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe (&lt;60dB)</span>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-[var(--card-sub-bg)] text-[11px] uppercase tracking-wider font-bold text-[var(--text-muted)] border-b border-[var(--border-color)]">
+                        <tr>
+                            <th scope="col" class="px-4 py-3.5">ID</th>
+                            <th scope="col" class="px-4 py-3.5">Citizen Contact</th>
+                            <th scope="col" class="px-4 py-3.5">Location & Coords</th>
+                            <th scope="col" class="px-4 py-3.5">Noise Level</th>
+                            <th scope="col" class="px-4 py-3.5">Source & Details</th>
+                            <th scope="col" class="px-4 py-3.5">Timestamp</th>
+                            <th scope="col" class="px-4 py-3.5">Status Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportsTableBody" class="divide-y divide-[var(--border-color)] text-xs">
+                        <tr>
+                            <td colspan="7" class="px-4 py-12 text-center text-[var(--text-muted)]">
+                                <span class="inline-block animate-spin mr-2">◌</span> Loading verified reports from database...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-[var(--border-color)] bg-[var(--nav-bg)] py-4 text-xs text-[var(--text-muted)] text-center">
+        NoiseWatch Authority Enforcement Panel • Authorized Personnel Only
+    </footer>
 
     <script>
         lucide.createIcons();
+
+        // Theme Toggle Controller
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIconSun = document.getElementById('themeIconSun');
+        const themeIconMoon = document.getElementById('themeIconMoon');
+        const themeToggleText = document.getElementById('themeToggleText');
+
+        function updateThemeUI(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                if (themeIconSun) themeIconSun.classList.remove('hidden');
+                if (themeIconMoon) themeIconMoon.classList.add('hidden');
+                if (themeToggleText) themeToggleText.textContent = 'Dark';
+            } else {
+                document.documentElement.classList.remove('dark');
+                if (themeIconSun) themeIconSun.classList.add('hidden');
+                if (themeIconMoon) themeIconMoon.classList.remove('hidden');
+                if (themeToggleText) themeToggleText.textContent = 'Light';
+            }
+            lucide.createIcons();
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const newTheme = isDark ? 'light' : 'dark';
+            localStorage.setItem('noisewatch_theme', newTheme);
+            updateThemeUI(!isDark);
+        }
+
+        if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+        updateThemeUI(document.documentElement.classList.contains('dark'));
 
         async function loadReports() {
             try {
@@ -102,8 +254,11 @@
                 let critical = 0;
                 let pending = 0;
 
-                if (data.reports.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-slate-500">No citizen reports recorded yet.</td></tr>`;
+                if (!data.reports || data.reports.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-10 text-center text-[var(--text-muted)]">No citizen reports recorded yet.</td></tr>`;
+                    document.getElementById('statTotal').textContent = '0';
+                    document.getElementById('statCritical').textContent = '0';
+                    document.getElementById('statPending').textContent = '0';
                     return;
                 }
 
@@ -112,59 +267,72 @@
                     if (r.status !== 'Resolved') pending++;
 
                     const badgeClass = r.db_level >= 75
-                        ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
-                        : (r.db_level >= 60 ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30');
+                        ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30'
+                        : (r.db_level >= 60 ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30');
+
+                    const latStr = (r.latitude !== null && r.latitude !== undefined) ? Number(r.latitude).toFixed(4) : null;
+                    const lngStr = (r.longitude !== null && r.longitude !== undefined) ? Number(r.longitude).toFixed(4) : null;
+                    const coordsDisplay = (latStr && lngStr) ? `${latStr}, ${lngStr}` : 'Coordinates N/A';
 
                     const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-800/30 transition-colors";
+                    tr.className = "hover:bg-[var(--card-sub-bg)] transition-colors";
                     tr.innerHTML = `
-            <td class="px-4 py-3 font-mono text-slate-400">#${r.id}</td>
-            <td class="px-4 py-3">
-              <div class="font-bold text-white">${r.full_name}</div>
-              <div class="text-[11px] text-slate-400">${r.phone}</div>
-              <div class="text-[11px] text-slate-500">${r.email}</div>
-            </td>
-            <td class="px-4 py-3">
-              <div class="font-semibold text-slate-200">${r.location}</div>
-              <div class="text-[10px] text-slate-500 font-mono">${r.latitude ? `${r.latitude.toFixed(3)},${r.longitude.toFixed(3)}` : 'GPS N/A'}</div>
-            </td>
-            <td class="px-4 py-3">
-              <span class="px-2 py-0.5 rounded border font-mono font-bold ${badgeClass}">
-                ${r.db_level} dB
-              </span>
-            </td>
-            <td class="px-4 py-3 max-w-[200px]">
-              <div class="font-medium text-slate-300">${r.source}</div>
-              <div class="text-[11px] text-slate-500 truncate" title="${r.description || ''}">${r.description || 'No description provided'}</div>
-            </td>
-            <td class="px-4 py-3 font-mono text-slate-400 text-[11px] whitespace-nowrap">${r.timestamp}</td>
-            <td class="px-4 py-3">
-              <select onchange="updateStatus(${r.id}, this.value)" class="bg-slate-950 border border-slate-800 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
-                <option value="Open" ${r.status === 'Open' ? 'selected' : ''}>Open</option>
-                <option value="Under Investigation" ${r.status === 'Under Investigation' ? 'selected' : ''}>Under Investigation</option>
-                <option value="Resolved" ${r.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
-              </select>
-            </td>
-          `;
+                        <td class="px-4 py-3.5 font-mono text-[var(--text-muted)] font-bold">#${r.id}</td>
+                        <td class="px-4 py-3.5">
+                            <div class="font-bold text-[var(--text-primary)]">${r.full_name || 'Anonymous Citizen'}</div>
+                            <div class="text-[11px] text-[var(--text-muted)] font-mono">${r.phone || 'N/A'}</div>
+                            <div class="text-[11px] text-[var(--text-muted)]">${r.email || 'N/A'}</div>
+                        </td>
+                        <td class="px-4 py-3.5">
+                            <div class="font-semibold text-[var(--text-primary)]">${r.location || 'Unspecified Location'}</div>
+                            <div class="text-[10px] text-[var(--text-muted)] font-mono mt-0.5">${coordsDisplay}</div>
+                        </td>
+                        <td class="px-4 py-3.5">
+                            <span class="px-2.5 py-1 rounded-lg border font-mono font-bold ${badgeClass}">
+                                ${r.db_level} dB
+                            </span>
+                        </td>
+                        <td class="px-4 py-3.5 max-w-[220px]">
+                            <div class="font-semibold text-[var(--text-primary)]">${r.source || 'General Noise'}</div>
+                            <div class="text-[11px] text-[var(--text-muted)] truncate mt-0.5" title="${r.description || ''}">
+                                ${r.description || 'No additional notes provided'}
+                            </div>
+                        </td>
+                        <td class="px-4 py-3.5 font-mono text-[var(--text-muted)] text-[11px] whitespace-nowrap">${r.timestamp || '--'}</td>
+                        <td class="px-4 py-3.5">
+                            <select onchange="updateStatus(${r.id}, this.value)" 
+                                class="bg-[var(--input-bg)] border border-[var(--border-color)] rounded-lg px-2.5 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500 font-medium shadow-sm">
+                                <option value="Open" ${r.status === 'Open' ? 'selected' : ''}>Open</option>
+                                <option value="Under Investigation" ${r.status === 'Under Investigation' ? 'selected' : ''}>Under Investigation</option>
+                                <option value="Resolved" ${r.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
+                            </select>
+                        </td>
+                    `;
                     tbody.appendChild(tr);
                 });
 
-                document.getElementById('statTotal').textContent = data.count;
+                document.getElementById('statTotal').textContent = data.count ?? data.reports.length;
                 document.getElementById('statCritical').textContent = critical;
                 document.getElementById('statPending').textContent = pending;
 
             } catch (err) {
-                console.error(err);
+                console.error('Failed to load reports:', err);
+                const tbody = document.getElementById('reportsTableBody');
+                tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-rose-500">Failed to connect to reports service. Check server console.</td></tr>`;
             }
         }
 
         async function updateStatus(reportId, status) {
-            await fetch(`/api/admin/reports/${reportId}/status`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status })
-            });
-            loadReports();
+            try {
+                await fetch(`/api/admin/reports/${reportId}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                loadReports();
+            } catch (err) {
+                console.error('Failed to update status:', err);
+            }
         }
 
         loadReports();
