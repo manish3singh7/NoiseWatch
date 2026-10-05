@@ -6,8 +6,10 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, s
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# Detect if templates are inside 'templates/' or in the root folder
-template_dir = os.path.abspath('templates') if os.path.isdir('templates') else os.path.abspath('.')
+# 1. Base directory and template resolution
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+template_dir = os.path.join(BASE_DIR, 'templates') if os.path.isdir(os.path.join(BASE_DIR, 'templates')) else BASE_DIR
+
 app = Flask(__name__, template_folder=template_dir)
 CORS(app)
 
@@ -15,11 +17,14 @@ CORS(app)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "noisewatch_super_secure_secret_key_2026")
 
 # --- ADMIN CREDENTIALS CONFIGURATION ---
-ADMIN_USERNAME = "admin"
-# Password: YourMasterPassword123
-ADMIN_PASSWORD_HASH = generate_password_hash("YourMasterPassword123")
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "YourMasterPassword123")
+ADMIN_PASSWORD_HASH = generate_password_hash(ADMIN_PASSWORD)
 
-DB_NAME = "noisewatch.db"
+# --- DATABASE CONFIGURATION (Single Source of Truth) ---
+DATA_DIR = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH", BASE_DIR)
+os.makedirs(DATA_DIR, exist_ok=True)
+DB_NAME = os.path.join(DATA_DIR, "noisewatch.db")
 
 def get_db():
     conn = sqlite3.connect(DB_NAME)
@@ -55,7 +60,18 @@ def init_db():
         ''')
         conn.commit()
 
+# Ensure tables exist immediately on application load
 init_db()
+
+# Safety hook: Verify database tables are initialized before handling requests
+_db_ready = False
+
+@app.before_request
+def ensure_db():
+    global _db_ready
+    if not _db_ready:
+        init_db()
+        _db_ready = True
 
 # Decorator to protect admin routes
 def login_required(f):
@@ -84,7 +100,7 @@ def admin_login():
             session['is_admin'] = True
             return redirect(url_for('admin'))
         else:
-            error = "Invalid administrator credentials. (Hint: admin / YourMasterPassword123)"
+            error = f"Invalid administrator credentials. (Hint: {ADMIN_USERNAME} / {ADMIN_PASSWORD})"
 
     return render_template('login.html', error=error)
 
@@ -102,7 +118,7 @@ def admin():
 
 # ----------------- API ROUTES -----------------
 
-# Public: Fetch aggregate complaint count (Fixes 404 in frontend)
+# Public: Fetch aggregate complaint count
 @app.route('/api/reports/count', methods=['GET'])
 def get_reports_count():
     try:
@@ -200,18 +216,6 @@ def update_status(report_id):
 
     return jsonify({'status': 'success', 'message': f'Report #{report_id} status updated to {new_status}'})
 
-# if __name__ == '__main__':
-#     print("==================================================")
-#     print("NoiseWatch Server Running at http://127.0.0.1:5000")
-#     print("Master Admin Credentials:")
-#     print("  Username: admin")
-#     print("  Password: YourMasterPassword123")
-#     print("==================================================")
-#     app.run(debug=True, port=5000)
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
-
-# Check for Railway Persistent Volume mount or fallback to local directory
-DATA_DIR = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH", ".")
-DB_NAME = os.path.join(DATA_DIR, "noisewatch.db")
