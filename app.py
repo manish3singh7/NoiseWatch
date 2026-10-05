@@ -208,3 +208,10 @@ if __name__ == '__main__':
     print("  Password: YourMasterPassword123")
     print("==================================================")
     app.run(debug=True, port=5000)
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
+    
+# Check for Railway Persistent Volume mount or fallback to local directory
+DATA_DIR = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH", ".")
+DB_NAME = os.path.join(DATA_DIR, "noisewatch.db")
